@@ -9,14 +9,14 @@ Weather weatherFromJson(String str) => Weather.fromJson(json.decode(str));
 String weatherToJson(Weather data) => json.encode(data.toJson());
 
 class Weather {
-  final List<dynamic>? result;
+  final List<ResultClass>? result;
 
   Weather({
     this.result,
   });
 
   Weather copyWith({
-    List<dynamic>? result,
+    List<ResultClass>? result,
   }) =>
       Weather(
         result: result ?? this.result,
@@ -25,7 +25,7 @@ class Weather {
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
         result: json["result"] == null
             ? []
-            : List<dynamic>.from(json["result"]!.map((x) => x)),
+            : List<ResultClass>.from(json["result"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {

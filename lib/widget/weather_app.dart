@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/bloc/weather_bloc.dart';
 import 'package:flutter_weather_app_with_bloc/widget/hava_durumu_resim.dart';
 import 'package:flutter_weather_app_with_bloc/widget/location_widget.dart';
 import 'package:flutter_weather_app_with_bloc/widget/max_min_sicaklik_widget.dart';
@@ -11,6 +13,7 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String kullanicininSectigiSehir = 'Edirne';
+    final weatherBloc = BlocProvider.of<WeatherBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
@@ -24,34 +27,57 @@ class WeatherApp extends StatelessWidget {
                   ),
                 );
                 debugPrint('Secilen Sehir :  $kullanicininSectigiSehir');
+                weatherBloc
+                    .add(FetchWeatherEvent(sehirAdi: kullanicininSectigiSehir));
               },
               icon: const Icon(Icons.search))
         ],
       ),
       body: Center(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: LocationWidget(
-                  secilenSehir: kullanicininSectigiSehir,
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(child: SonGuncellemeWidget()),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(child: HavaDurumuResimWidget()),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(child: MaxveMinSicaklikWidget()),
-            ),
-          ],
+        child: BlocBuilder<WeatherBloc, WeatherState>(
+          bloc: weatherBloc,
+          builder: (context, state) {
+            if (state is WeatherInitial) {
+              return const Center(
+                child: Text('Şehir Seçiniz'),
+              );
+            } else if (state is WeatherLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is WeatherLoadedState) {
+              final getirilenWeather = state.weather;
+              getirilenWeather.result![0];
+              return ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: LocationWidget(
+                        secilenSehir: kullanicininSectigiSehir,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: SonGuncellemeWidget()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: HavaDurumuResimWidget()),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: MaxveMinSicaklikWidget()),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(
+                child: Text('Hata oluştu'),
+              );
+            }
+          },
         ),
       ),
     );

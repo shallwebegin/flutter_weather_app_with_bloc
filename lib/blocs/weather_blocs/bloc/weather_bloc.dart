@@ -18,7 +18,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         try {
           final Future<Weather> getirilenWeather =
               weatherRepository.getWeather(event.sehirAdi);
-          emit(WeatherLoaded(weather: Weather()));
+          emit(WeatherLoadedState(weather: Weather()));
         } catch (e) {
           emit(WeatherErrorState());
         }
