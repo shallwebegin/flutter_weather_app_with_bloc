@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_weather_app_with_bloc/locator.dart';
 
 import 'widget/weather_app.dart';
 
 void main() {
+  setupLocator();
   runApp(const MyApp());
 }
 
