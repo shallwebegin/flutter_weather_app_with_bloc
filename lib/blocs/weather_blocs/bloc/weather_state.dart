@@ -14,6 +14,7 @@ class WeatherLoadingState extends WeatherState {}
 class WeatherLoadedState extends WeatherState {
   const WeatherLoadedState({required this.weather});
   final Weather weather;
+
   @override
   List<Object> get props => [weather];
 }

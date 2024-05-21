@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/bloc/weather_bloc.dart';
@@ -14,6 +16,7 @@ class WeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     String kullanicininSectigiSehir = 'Edirne';
     final weatherBloc = BlocProvider.of<WeatherBloc>(context);
+    Completer<void> _refreshCompleter = Completer();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
@@ -47,30 +50,38 @@ class WeatherApp extends StatelessWidget {
               );
             } else if (state is WeatherLoadedState) {
               final getirilenWeather = state.weather;
-              getirilenWeather.result![0];
-              return ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: LocationWidget(
-                        secilenSehir: kullanicininSectigiSehir,
+              _refreshCompleter.complete();
+              _refreshCompleter = Completer();
+              return RefreshIndicator(
+                onRefresh: () {
+                  weatherBloc.add(
+                      RefreshWeatherEvent(sehirAdi: kullanicininSectigiSehir));
+                  return _refreshCompleter.future;
+                },
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: LocationWidget(
+                          secilenSehir: getirilenWeather.city ?? '',
+                        ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(child: SonGuncellemeWidget()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(child: HavaDurumuResimWidget()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: MaxveMinSicaklikWidget()),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(child: SonGuncellemeWidget()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(child: HavaDurumuResimWidget()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: MaxveMinSicaklikWidget()),
+                    ),
+                  ],
+                ),
               );
             } else {
               return const Center(

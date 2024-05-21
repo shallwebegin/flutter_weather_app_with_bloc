@@ -9,32 +9,45 @@ Weather weatherFromJson(String str) => Weather.fromJson(json.decode(str));
 String weatherToJson(Weather data) => json.encode(data.toJson());
 
 class Weather {
-  final List<ResultClass>? result;
+  final bool? success;
+  final String? city;
+  final List<Result>? result;
 
   Weather({
+    this.success,
+    this.city,
     this.result,
   });
 
   Weather copyWith({
-    List<ResultClass>? result,
+    bool? success,
+    String? city,
+    List<Result>? result,
   }) =>
       Weather(
+        success: success ?? this.success,
+        city: city ?? this.city,
         result: result ?? this.result,
       );
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
+        success: json["success"],
+        city: json["city"],
         result: json["result"] == null
             ? []
-            : List<ResultClass>.from(json["result"]!.map((x) => x)),
+            : List<Result>.from(json["result"]!.map((x) => Result.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "result":
-            result == null ? [] : List<dynamic>.from(result!.map((x) => x)),
+        "success": success,
+        "city": city,
+        "result": result == null
+            ? []
+            : List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
-class ResultClass {
+class Result {
   final String? date;
   final String? day;
   final String? icon;
@@ -46,7 +59,7 @@ class ResultClass {
   final String? night;
   final String? humidity;
 
-  ResultClass({
+  Result({
     this.date,
     this.day,
     this.icon,
@@ -59,7 +72,7 @@ class ResultClass {
     this.humidity,
   });
 
-  ResultClass copyWith({
+  Result copyWith({
     String? date,
     String? day,
     String? icon,
@@ -71,7 +84,7 @@ class ResultClass {
     String? night,
     String? humidity,
   }) =>
-      ResultClass(
+      Result(
         date: date ?? this.date,
         day: day ?? this.day,
         icon: icon ?? this.icon,
@@ -84,7 +97,7 @@ class ResultClass {
         humidity: humidity ?? this.humidity,
       );
 
-  factory ResultClass.fromJson(Map<String, dynamic> json) => ResultClass(
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
         date: json["date"],
         day: json["day"],
         icon: json["icon"],
