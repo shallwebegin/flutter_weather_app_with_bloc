@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/bloc/weather_bloc.dart';
+import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/weather_bloc.dart';
 
 class HavaDurumuResimWidget extends StatelessWidget {
   const HavaDurumuResimWidget({super.key});
@@ -18,7 +18,9 @@ class HavaDurumuResimWidget extends StatelessWidget {
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             Image.network(
-                '${(state as WeatherLoadedState).weather.result![0].icon}'),
+              '${(state as WeatherLoadedState).weather.result![0].icon}',
+              height: MediaQuery.of(context).size.height / 4,
+            ),
           ],
         );
       },

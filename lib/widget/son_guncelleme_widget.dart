@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/bloc/weather_bloc.dart';
+import 'package:flutter_weather_app_with_bloc/blocs/weather_blocs/weather_bloc.dart';
 
 class SonGuncellemeWidget extends StatelessWidget {
   const SonGuncellemeWidget({super.key});
