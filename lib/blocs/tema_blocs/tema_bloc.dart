@@ -9,7 +9,8 @@ part 'tema_state.dart';
 
 class TemaBloc extends Bloc<TemaEvent, TemaState> {
   TemaBloc()
-      : super(UygulamaTemasi(theme: ThemeData.light(), renk: Colors.blue)) {
+      : super(UygulamaTemasi(
+            theme: ThemeData.light(useMaterial3: false), renk: Colors.blue)) {
     on<TemaDegistirEvent>((event, emit) {
       UygulamaTemasi uygulamaTemasi;
       if (event is TemaDegistirEvent) {
